@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Platush RUSH</title>
+</head>
+<body>
+    <div id="game">
+        <div class="Authorization">
+            <!-- <div class="login">
+                <div class="header-auth">Авторизація</div>
+
+                <div>
+                    <label>Логін</label><br>
+                    <input/>
+                </div>
+
+                <div>
+                    <label>Пароль</label><br>
+                    <input type="password"/>
+                </div>
+
+                <button>Авторизуватись</button>
+                <button id="switchRegister">Реєстрація</button>
+            </div>
+
+            <div class="register hidden">
+                <div class="header-auth">Реєстрація</div>
+                <div>
+                    <label>Логін</label><br>
+                    <input/>
+                </div>
+
+                <div>
+                    <label>Пароль</label><br>
+                    <input/>
+                </div>
+
+                <div>
+                    <label>Підтвердження паролю</label><br>
+                    <input/>
+                </div>
+
+                <button>Зареєеструватись</button>
+                <button id="switchLogin">Авторизуватись</button>
+            </div> -->
+            <div class="header-auth">
+                <div>Введіть нікнейм</div>
+                <input class="usernameInput" />
+
+                <button id="registerButton">Увійти</button>
+            </div>
+        </div>
+
+        <div id="MainMenu" class="MainMenu">
+            <div class="Settings_button">
+                <div id="showSettingsButton"></div>
+            </div>
+
+            <div class="MainMenu__login-container">
+                <div class="Lobbies-list"></div>
+
+                <!-- <div class="GameLogo">Platum RUSH</div> -->
+                <label for="playerName">Ім'я гравця:</label>
+                <input type="text" id="playerName" name="playerName" required>
+            
+                <label for="lobbyCode">Код лобі:</label>
+                <input type="text" id="lobbyCode" name="lobbyCode" required>
+                
+                <div class="buttons">
+                    <button class="create-lobby-button" id="createLobbyButton">Створити лобі</button>
+                    <button id="joinGameButton">Увійти до гри</button>
+                </div>
+            </div>
+
+            <div id="LobbyView" class="MainMenu__LobbyView">
+                <div class="player-list">
+                    <div class="header"></div>
+                    <div class="list"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="Settings">
+            Налаштування
+        </div>
+
+        <div id="GameView" class="GameView">
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+</body>
+</html>
