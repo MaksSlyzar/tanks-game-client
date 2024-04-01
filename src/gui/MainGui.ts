@@ -1,9 +1,10 @@
 import GameView from "./GameView";
-import LobbyView from "./LobbyView";
-import MainMenuView from "./MainMenuView";
+import MainMenuView from "./MainMenuView/MainMenuView";
 import SettingsView from "./SettingsView";
 import { View } from "../modules/View";
 import AuthorizationView from "./Authorization";
+import CreateGameView from "./MainMenuView/CreateGameView";
+import RoomView from "./RoomView";
 
 class MainGui {
   views: Array<View> = [];
@@ -13,6 +14,7 @@ class MainGui {
     this.appendView(new SettingsView());
     this.appendView(new GameView());
     this.appendView(new AuthorizationView());
+    this.appendView(new RoomView());
 
     this.changeView("Authorization");
     // this.gameViewDebugMode();
@@ -31,7 +33,6 @@ class MainGui {
   }
 
   changeView(viewName: string) {
-    console.log(viewName);
     for (const view of this.views) {
       if (view.name != viewName) view.hide();
       else view.show();

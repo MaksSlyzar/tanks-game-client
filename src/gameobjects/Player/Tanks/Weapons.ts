@@ -15,7 +15,7 @@ export class HeavyWeapon extends GameObject {
 
     constructor (tankBody: HeavyTankBody) {
         super();
-        this.rotation = 0.01;
+        this.rotation = 0.09;
         this.tankBody = tankBody;
 
         CanvasManager.events.setOnKeyUp((code) => this.shoot(code));
@@ -51,7 +51,8 @@ export class HeavyWeapon extends GameObject {
         ctx.beginPath();
         ctx.moveTo(0, 0);
         ctx.lineTo(1000, 0);
-        ctx.strokeStyle = "rgba(0, 128, 0, 0.5)";
+        ctx.lineWidth = 0.4;
+        ctx.strokeStyle = "red";
         ctx.stroke();
         
         ctx.drawImage(sprite.image, this.tankBody.width / 2 * (-1) + this.tankBody.width / 2 - 20, this.tankBody.height / 2 * (-1) + this.tankBody.height / 2 - 25);

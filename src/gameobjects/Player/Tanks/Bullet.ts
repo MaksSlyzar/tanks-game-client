@@ -12,7 +12,7 @@ class Bullet extends GameObject {
         super();
         this.tag = "bullet";
 
-        this.speed = 10;
+        this.speed = 20;
         this.collidingObject = true;
         this.shape = quadColliderMesh(4, 4);
     }

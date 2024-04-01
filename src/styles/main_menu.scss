@@ -1,6 +1,6 @@
 $primary-color: #052b46;
 $secondary-color: #2ecc71;
-$background-color: #f1c40f;
+$background-color: #2ecc71;
 $font-color: #ecf0f1;
 
 .Settings_button {
@@ -22,154 +22,110 @@ $font-color: #ecf0f1;
     }
 }
 
+
 .MainMenu {
     padding: 50px;
     position: absolute;
     width: calc(100% - 100px);
     height: calc(100% - 100px);
-    display: flex;
+    // display: flex;
     align-items: center;
     justify-content: center;
-    background-color: $background-color;
+    background-color: $secondary-color;
 
-    &__LobbyView {
+    &__CreateGameView {
         display: block;
-        background-color: $primary-color;
-        color: white;
+        width: 300px;
         width: 40%;
-        height: 100%;
-        margin: 20px;
-        text-align: center;
-        border-radius: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        height: auto;
+        text-align: left;
 
-        .player-list {
-            font-size: 21px;
+        input {
+            width: 140px;
+            height: 20px;
+            background-color: $primary-color;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-bottom: 2px rgb(0, 160, 172) solid;
+        }
+
+        button {
+            width: 100px;
+            height: 20px;
+            background-color: rgb(0, 160, 172);
+            border: white;
+            color: white;
+        }
+
+        button:active {
+            background-color: rgb(1, 95, 102);
             color: white;
         }
     }
 
-    &__login-container {
-        width: 100%;
-        height: 100%;
-        background-color: $primary-color;
-        border-radius: 10px;
-        // text-align: center;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        margin: 20px;
-        // display: flex;
-
-
-        .Lobbies-list {
-            width: 90%;
-            height: 300px;
-            
-            background: green;
-            border: #2ecc71 solid 4px;
-            border-radius: 30px;
-        }
-      
-        h1 {
-          color: $font-color;
-        }
-      
-        * {
-            display: block;
-            margin: 20px;
-        }
-    
-        label {
-            font-size: 18px;
-            margin-bottom: 5px;
-            color: $font-color;
-        }
-    
-        input {
-            width: 400px;
-            height: 30px;
-            font-size: 16px;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: none;
-            border-radius: 5px;
-        }
-
-        .buttons {
-            display: flex;
-        }
-    
-        button {
-            padding: 10px;
-            background-color: $secondary-color;
-            color: $font-color;
-            width: 150px;
-            // height: 30px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-    
-            &:hover {
-                background-color: darken($secondary-color, 10%);
-            }
-        }
-    }
-}
-
-// .Authorization {
-//     width: 100%;
-//     height: 100%;
-//     display: flex;
-//     justify-content: center;
-//     // background-color: black;
-
-//     input {
-//         width: 300px;
-//         height: 30px;
-//         margin: 10px;
-//     }
-
-//     button {
-//         width: 120px;
-//         height: 30px;
-//     }
-
-//     .login {
-//         text-align: center;
-//         height: 300px;
-//     }
-
-//     .register {
-//         text-align: center;
-//         height: 300px;
-//     }
-
-//     .header-auth {
-//         font-size: 25px;
-//     }
-// }
-
-
-.Authorization {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    // background-color: black;
-
-    input {
+    &__RoomListView {
         width: 300px;
-        height: 30px;
-        margin: 10px;
-    }
+        color: white;
+        width: 40%;
+        margin: 20px;
+        text-align: center;
 
-    button {
-        width: 120px;
-        height: 30px;
-    }
+        &-list {
+            height: 200px;
+            overflow: auto;
+        }
 
-    .header-auth {
-        font-size: 25px;
+        &-item {
+            color: white;
+            text-align: left;
+            cursor: default;
+            user-select: none;
+            border-bottom: silver 1px solid;
+            margin: 2px;
+        }
+
+        .active {
+            color: rgb(0, 0, 0);
+            text-align: left;
+            background-color: rgb(204, 204, 204);
+        }
+
+        &-item:hover {
+            color: rgb(0, 0, 0);
+            text-align: left;
+            background-color: rgb(214, 214, 214);
+        }
+
+        &-join-form {
+            padding-top: 20px;
+            height: 40px;
+            
+            button {
+                background-color: gray;
+                width: 100px;
+                height: 20px;
+                color: white;
+                float: right;
+                border: white;
+            }
+
+            button:active {
+                background-color: rgb(1, 95, 102);
+                color: white;
+            }
+
+            .activated {
+                background-color: rgb(0, 160, 172);
+            }
+
+            &-username {
+                padding-right: 40px;
+                float: left;
+            }
+
+
+        }
     }
 }
 

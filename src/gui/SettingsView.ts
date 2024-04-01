@@ -1,5 +1,5 @@
 import MainGui from "./MainGui";
-import MainMenuView from "./MainMenuView";
+import MainMenuView from "./MainMenuView/MainMenuView";
 import { View } from "../modules/View";
 const settingsIcon = require("../assets/settings-icon.svg");
 console.log(settingsIcon.default, "SETTINGS ICON")

@@ -1,3 +1,4 @@
+import SIOManager from "../managers/SIOManager";
 import { View } from "../modules/View";
 import MainGui from "./MainGui";
 
@@ -6,11 +7,7 @@ class AuthorizationView extends View {
     const elem = document.getElementsByClassName(
       "Authorization"
     )[0] as HTMLDivElement;
-    // const loginDiv = elem.getElementsByClassName("login")[0] as HTMLDivElement;
-    // const registerDiv = elem.getElementsByClassName("register")[0] as HTMLDivElement;
 
-    // const switchRegisterButton = document.getElementById("switchRegister") as HTMLButtonElement;
-    // const switchLoginButton = document.getElementById("switchLogin") as HTMLButtonElement;
     const registerButton = document.getElementById(
       "registerButton"
     ) as HTMLButtonElement;
@@ -24,9 +21,46 @@ class AuthorizationView extends View {
       const value = usernameInput.value;
 
       if (value.length >= 6) {
-        MainGui.changeView("MainMenu");
+        SIOManager.socket.emit("register", { username: value });
       }
     };
+
+    SIOManager.socket.on("authSuccessfully", playerNetwork => {
+      const { token, gameSession, id } = playerNetwork;
+
+      SIOManager.playerId = id;
+
+      SIOManager.username = playerNetwork.username;
+
+      localStorage.setItem("token", token);
+
+      switch (gameSession) {
+        case "room":
+          MainGui.changeView("Room");
+        break;
+
+        case "menu":
+          MainGui.changeView("MainMenu");
+        break;
+
+        // case ""
+      }
+      //   MainGui.changeView("MainMenu");
+      // else
+      //   MainGui.changeView("Game")
+    });
+
+    SIOManager.socket.on("authFailed", error => {
+      // this.show();
+      console.log(error)
+    });
+
+    const token = localStorage.getItem("token");
+    console.log(token)
+    
+    if (token != null) {
+      SIOManager.socket.emit("authByToken", token);
+    }
 
     this.show();
   }

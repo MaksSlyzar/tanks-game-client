@@ -19,12 +19,11 @@ export class Player extends GameObject {
 
     this.posX = 100;
     this.posY = 300;
-
-    this.tank = new HeavyTankBody();
   }
 
   update() {
-    this.tank.update();
+    if (this.tank)
+      this.tank.update();
     return true;
   }
 
