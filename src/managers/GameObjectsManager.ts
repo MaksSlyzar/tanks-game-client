@@ -4,13 +4,44 @@ import Enemie from "../gameobjects/Enemies/Enemie";
 import Grid from "../gameobjects/Grid";
 import { Player } from "../gameobjects/Player/Player";
 import { HeavyTankBody } from "../gameobjects/Player/Tanks/TankBody";
+import { HeavyTankBodyNetwork } from "../gameobjects/Player/Tanks/TankBodyNetwork";
 import { GameObject } from "../modules/GameObject";
 import SIOManager from "./SIOManager";
+
+interface CreateGameObjectsData {
+    players: Array<{
+        id: number,
+        username: string,
+        tankBody: {
+            posX: number,
+            posY: number,
+            rotation: number,
+        },
+        gameRole: "heavy"|"engeenier"
+    }>
+};
+
+interface SyncObjectsData {
+    players: Array<{
+        id: number,
+        tankBody: {
+            posX: number,
+            posY: number,
+            rotation: number,
+            weapon: {
+                rotation: number
+            }
+        },
+        gameRole: "heavy"|"engeenier"
+    }>
+};
 
 class GameObjectsManager {
     gameObjects: Array<GameObject>;
     camera: Camera;
     initedGame: boolean;
+    deltaTime: number;
+    players: Array<Player>;
 
     constructor () {
         this.initedGame = false;
@@ -38,40 +69,67 @@ class GameObjectsManager {
         en1.setY(800);
         en1.posX = 1000;
         this.gameObjects.push(en1);
+
+
+        SIOManager.socket.on("sendSyncData", (data: SyncObjectsData) => {
+            data.players.map(player => {
+                // if (player.id == SIOManager.playerId)
+                //     return;
+                const playerObject = this.getObjectById(player.id) as HeavyTankBody;
+                
+                if (playerObject == null)
+                    return;
+            
+                playerObject.targetX = player.tankBody.posX;
+                playerObject.targetY = player.tankBody.posY;
+                playerObject.rotation = player.tankBody.rotation;
+                playerObject.weapon.rotation = player.tankBody.weapon.rotation;
+
+            });
+        });
     }
 
-    init (data: any) {
-        const players = data.players as Array<{
-            targetX: number,
-            targetY: number,
-            targetRotation: number,
-            _type: "engeenier"|"heavy"
-            id: number
-        }>;
+    getObjectById (id: number) {
+        // this.gameObjects.forEach(go => {
+        //     // console.log(go.id)
+        // })
+        return this.gameObjects.find(object => object.id == id);
+    }
 
-        players.map(player => {
-            if (player.id == SIOManager.playerId) {
+    init (data: CreateGameObjectsData) {
+        data.players.forEach(player => {
+            const isClientPlayer = player.id == SIOManager.playerId;
+            const playerGameObject = new Player();
+            switch (player.gameRole) {
+                case "engeenier":
 
-                const playerGameObject = new Player();
-                switch (player._type) {
-                    case "engeenier":
+                break;
 
-                    break;
-
-                    case "heavy":
-                        playerGameObject.tank = new HeavyTankBody();
-                    break;  
-                }
-
-                this.camera = new Camera(playerGameObject.tank);
-                this.gameObjects.push(playerGameObject);
+                case "heavy":
+                    playerGameObject.tank = isClientPlayer? new HeavyTankBody(playerGameObject): new HeavyTankBodyNetwork(playerGameObject);
+                break;  
             }
+
+            playerGameObject.id = player.id;
+            playerGameObject.username = player.username;
+            playerGameObject.tank.id = player.id;
+            playerGameObject.tank.posX = player.tankBody.posX;
+            playerGameObject.tank.posY = player.tankBody.posY;
+            playerGameObject.tank.rotation = player.tankBody.rotation;
+
+            if (isClientPlayer) {
+                this.camera = new Camera(playerGameObject.tank);
+            } else {
+                
+            }
+            this.gameObjects.push(playerGameObject.tank);
         });
 
         this.initedGame = true;
     }
 
-    update () {
+    update (deltaTime: number) {
+        this.deltaTime = deltaTime;
         if (this.initedGame == false)
             return;
 

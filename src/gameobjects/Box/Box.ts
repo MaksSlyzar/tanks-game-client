@@ -16,8 +16,6 @@ class Box extends GameObject {
     }
 
     update () {
-        const Player = GameObjectsManager.gameObjects[0] as Player;
-        const tankBody = Player.tank;
         this.activeShape = updateShape(this.posX + 25, this.posY + 25, this.rotation, this.shape);
         return true;
     }

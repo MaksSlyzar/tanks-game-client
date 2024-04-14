@@ -25,8 +25,8 @@ class Camera extends GameObject {
     }
 
     update () {
-        this.posX += (this.gameObject.posX - CanvasManager.canvas.width / 2 - 16 - this.posX) * 0.15;
-        this.posY += (this.gameObject.posY - CanvasManager.canvas.height / 2 - 16 - this.posY) * 0.15;
+        this.posX += (this.gameObject.posX - CanvasManager.canvas.width / 2 - 16 - this.posX) * 0.90;
+        this.posY += (this.gameObject.posY - CanvasManager.canvas.height / 2 - 16 - this.posY) * 0.90;
         return true;
     }
 

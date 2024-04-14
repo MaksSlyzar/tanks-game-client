@@ -1,6 +1,7 @@
 import AssetsManager from "../../../managers/AssetsManager";
 import CanvasManager from "../../../managers/CanvasManager";
 import GameObjectsManager from "../../../managers/GameObjectsManager";
+import SIOManager from "../../../managers/SIOManager";
 import { GameObject } from "../../../modules/GameObject";
 import Bullet from "./Bullet";
 import { HeavyTankBody } from "./TankBody";
@@ -12,6 +13,8 @@ export class Weapon extends GameObject {
 export class HeavyWeapon extends GameObject {
     tankBody: HeavyTankBody;
     rotation: number;
+    dx: number;
+    dy: number;
 
     constructor (tankBody: HeavyTankBody) {
         super();
@@ -77,48 +80,62 @@ export class HeavyWeapon extends GameObject {
         bullet.rotation = this.rotation + this.tankBody.rotation;
 
         GameObjectsManager.gameObjects.push(bullet);
+
+        SIOManager.socket.emit("useSpell", { spellType: "shoot" });
     }
 
     update(): boolean {
-        if (CanvasManager.keyDown("e")) {
-            this.rotation -= 0.02;
-        }
+        // if (CanvasManager.keyDown("e")) {
+        //     this.rotation -= 0.02;
+        // }
 
-        if (CanvasManager.keyDown("r")) {
-            this.rotation += 0.02;
-        }
+        // if (CanvasManager.keyDown("r")) {
+        //     this.rotation += 0.02;
+        // }
 
-        const dx = CanvasManager.mouse.x - this.tankBody.posX -45;
-        const dy = CanvasManager.mouse.y - this.tankBody.posY -40;
+        this.dx = CanvasManager.mouse.x - this.tankBody.posX -45 + GameObjectsManager.camera.posX;
+        this.dy = CanvasManager.mouse.y - this.tankBody.posY -40 + GameObjectsManager.camera.posY;
 
-        const addRotation = -Math.atan2(dx + GameObjectsManager.camera.posX, dy + GameObjectsManager.camera.posY) + (90 * Math.PI / 180);
+        // const sendData = {
+        //     dx: this.dx,
+        //     dy: this.dy
+        // };
 
-        if (Math.abs(addRotation - this.rotation -this.tankBody.rotation) <=0.01) {
-            this.rotation = addRotation - this.tankBody.rotation;
-            return true;
-        }
+        // const addRotation = -Math.atan2(dx + GameObjectsManager.camera.posX, dy + GameObjectsManager.camera.posY) + (90 * Math.PI / 180);
+
+        // if (Math.abs(addRotation - this.rotation -this.tankBody.rotation) <=0.01) {
+        //     this.rotation = addRotation - this.tankBody.rotation;
+        //     return true;
+        // }
         
-        if (addRotation > this.rotation + this.tankBody.rotation) {
-            if (360 - toDeg(addRotation) + toDeg(this.rotation + this.tankBody.rotation) < toDeg(addRotation) - toDeg(this.rotation + this.tankBody.rotation)) {
-                this.rotation -= 0.015;
-            } else {
-                this.rotation += 0.015;
-            }
-        } else {
-            if (360 - toDeg(this.rotation + this.tankBody.rotation) + toDeg(addRotation) < toDeg(this.rotation + this.tankBody.rotation) - toDeg(addRotation)) {
-                this.rotation += 0.015;
-            } else {
-                this.rotation -= 0.015;
-            }
-        }
+        // if (addRotation > this.rotation + this.tankBody.rotation) {
+        //     if (360 - toDeg(addRotation) + toDeg(this.rotation + this.tankBody.rotation) < toDeg(addRotation) - toDeg(this.rotation + this.tankBody.rotation)) {
+        //         this.rotation -= 0.015;
+        //     } else {
+        //         this.rotation += 0.015;
+        //     }
+        // } else {
+        //     if (360 - toDeg(this.rotation + this.tankBody.rotation) + toDeg(addRotation) < toDeg(this.rotation + this.tankBody.rotation) - toDeg(addRotation)) {
+        //         this.rotation += 0.015;
+        //     } else {
+        //         this.rotation -= 0.015;
+        //     }
+        // }
 
-        if (this.rotation + this.tankBody.rotation < -1.57) {
-            this.rotation = 6.28 - 1.57 - this.tankBody.rotation;
-        } else if (this.rotation + this.tankBody.rotation > 6.28 - 1.57) {
-            this.rotation = -1.57 - this.tankBody.rotation;
-        }
+        // if (this.rotation + this.tankBody.rotation < -1.57) {
+        //     this.rotation = 6.28 - 1.57 - this.tankBody.rotation;
+        // } else if (this.rotation + this.tankBody.rotation > 6.28 - 1.57) {
+        //     this.rotation = -1.57 - this.tankBody.rotation;
+        // }
         
         return true;
+    }
+
+    networkSend () {
+        return {
+            dx: this.dx,
+            dy: this.dy,
+        };
     }
 }
 

@@ -5,6 +5,8 @@ import AssetsManager from "../../../managers/AssetsManager";
 import GameObjectsManager from "../../../managers/GameObjectsManager";
 import SAT from "sat";
 import { Vector2d, quadColliderMesh, satCollide, updateShape } from "../../../modules/SAT";
+import SIOManager from "../../../managers/SIOManager";
+import { Player } from "../Player";
 // export class TankBody extends GameObject {
 //     weapon: Weapon;
 
@@ -22,6 +24,20 @@ import { Vector2d, quadColliderMesh, satCollide, updateShape } from "../../../mo
 //     }
 // }
 
+interface SendSyncData {
+    // tankBody: {
+    //     posX: number,
+    //     posY: number,
+    //     rotation: number,
+    // }
+    rotate: "LEFT"|"RIGHT"|"NONE",
+    movement: "UP"|"DOWN"|"NONE",
+    weapon: {
+        dx: number,
+        dy: number
+    }
+};
+
 export class HeavyTankBody extends GameObject {
     weapon: HeavyWeapon;
 
@@ -35,9 +51,15 @@ export class HeavyTankBody extends GameObject {
     engine: "UP"|"DOWN"|"OFF";
     width: number = 116;
     height: number = 75;
+    pushSpeed: number = 0.02;
+    standartPushSpeed: number = 10;
+    targetX: number = 0;
+    targetY: number = 0;
+    player: Player;
 
-    constructor () {
+    constructor (playerGameObject: Player) {
         super();
+        this.player = playerGameObject;
         this.speed = 0;
         this.maxSpeed = 4;
         this.rotationSpeed = 0.02;
@@ -52,85 +74,134 @@ export class HeavyTankBody extends GameObject {
     }
 
     update () {
+        if (GameObjectsManager.deltaTime > 1)
+            return;
+        this.pushSpeed = this.standartPushSpeed * GameObjectsManager.deltaTime;
+
+        // if (GameObjectsManager.deltaTime > 1) 
+        //     console.log(GameObjectsManager.deltaTime)
         const tempPosX = this.posX;
         const tempPosY = this.posY;
         const tempRotation = this.rotation;
+
+
+        const sendData: SendSyncData = {
+            // tankBody: {
+            //     posX: this.posX,
+            //     posY: this.posY,
+            //     rotation: this.rotation
+            // }
+            rotate: "NONE",
+            movement: "NONE",
+            weapon: this.weapon.networkSend()
+        };
+
+        // console.log(sendData)
+
+        if (CanvasManager.keyDown("a")) {
+            sendData.rotate = "LEFT";
+        }
+
+        if (CanvasManager.keyDown("d")) {
+            sendData.rotate = "RIGHT";
+        }
+
+        if (CanvasManager.keyDown("w")) {
+            sendData.movement = "UP";
+        }
+
+        if (CanvasManager.keyDown("s")) {
+            sendData.movement = "DOWN";
+        }
+
+        // console.log(sendData)
+        SIOManager.socket.emit("sendMoveData", sendData);
+
+        this.posX += (this.targetX - this.posX) * 0.10;
+        this.posY += (this.targetY - this.posY) * 0.10;
         let rotationCollision = false;
 
-        this.posX += Math.cos(this.rotation) * this.speed;
-        this.posY += Math.sin(this.rotation) * this.speed;
+        // this.posX += Math.cos(this.rotation) * this.speed;
+        // this.posY += Math.sin(this.rotation) * this.speed;
 
-        this.activeShape = updateShape(this.posX + this.width / 2, this.posY + this.height / 2, this.rotation, this.shape);
+        // this.activeShape = updateShape(this.posX + this.width / 2, this.posY + this.height / 2, this.rotation, this.shape);
         
-        for (let go of GameObjectsManager.gameObjects) {
-            if (go.collidingObject == true) {
-                let collide = satCollide(this.activeShape, go.activeShape);
-                if (collide) {
-                    this.posX = tempPosX;
-                    this.posY = tempPosY;
-                    this.speed = 0;
-                    break;
-                }
-            }
-        }
+        // for (let go of GameObjectsManager.gameObjects) {
+        //     if (go.collidingObject == true) {
+        //         // console.log(this.activeShape, go.activeShape)
+        //         let collide = satCollide(this.activeShape, go.activeShape);
+        //         if (collide) {
+        //             this.posX = tempPosX;
+        //             this.posY = tempPosY;
+        //             this.speed = 0;
+        //             break;
+        //         }
+        //     }
+        // }
 
-        this.engine = "OFF";
-        if (CanvasManager.keyDown("w")) {
-            if (this.maxSpeed > this.speed) {
-                this.speed += 0.02;
-                this.engine = "UP";
-            }
+        // this.engine = "OFF";
+        // if (CanvasManager.keyDown("w")) {
+        //     if (this.maxSpeed > this.speed) {
+        //         this.speed += this.pushSpeed;
+        //         this.engine = "UP";
+        //     }
 
-            if (CanvasManager.keyDown("a")) {
-                this.rotation -= this.rotationSpeed;
-            }
-            if (CanvasManager.keyDown("d")) {
-                this.rotation += this.rotationSpeed;
-            }
-        }
+        //     if (CanvasManager.keyDown("a")) {
+        //         this.rotation -= this.rotationSpeed;
+        //     }
+        //     if (CanvasManager.keyDown("d")) {
+        //         this.rotation += this.rotationSpeed;
+        //     }
+        // }
 
-        else if (CanvasManager.keyDown("s")) {
-            if (this.minSpeed < this.speed) {
-                this.speed -= 0.02;
-                this.engine = "DOWN";
-            }
+        // else if (CanvasManager.keyDown("s")) {
+        //     if (this.minSpeed < this.speed) {
+        //         this.speed -= this.pushSpeed;
+        //         this.engine = "DOWN";
+        //     }
 
-            if (CanvasManager.keyDown("a")) {
-                this.rotation += this.rotationSpeed;
-            }
-            if (CanvasManager.keyDown("d")) {
-                this.rotation -= this.rotationSpeed;
-            }
-        } else {
-            if (CanvasManager.keyDown("a")) {
-                this.rotation -= this.rotationSpeed;
-            }
-            if (CanvasManager.keyDown("d")) {
-                this.rotation += this.rotationSpeed;
-            }
-        }
+        //     if (CanvasManager.keyDown("a")) {
+        //         this.rotation += this.rotationSpeed;
+        //     }
+        //     if (CanvasManager.keyDown("d")) {
+        //         this.rotation -= this.rotationSpeed;
+        //     }
+        // } else {
+        //     if (CanvasManager.keyDown("a")) {
+        //         this.rotation -= this.rotationSpeed;
+        //     }
+        //     if (CanvasManager.keyDown("d")) {
+        //         this.rotation += this.rotationSpeed;
+        //     }
+        // }
 
-        this.activeShape = updateShape(this.posX + this.width / 2, this.posY + this.height / 2, this.rotation, this.shape);
+        // if (CanvasManager.keyDown("p")) {
+        //     this.posX = 0;
+        //     this.posY = 0;
+        // }
 
-        for (let go of GameObjectsManager.gameObjects) {
-            if (go.collidingObject == true) {
-                let collide = satCollide(this.activeShape, go.activeShape);
-                if (collide) {
-                    this.rotation = tempRotation;
-                    break;
-                }
-            }
-        }
+        // this.activeShape = updateShape(this.posX + this.width / 2, this.posY + this.height / 2, this.rotation, this.shape);
 
-        if (this.engine == "OFF") {
-            if (this.speed > 0) {
-                this.speed -= 0.02;
-            } else if (this.speed < 0) {
-                this.speed += 0.02;
-            }
-        }
+        // for (let go of GameObjectsManager.gameObjects) {
+        //     if (go.collidingObject == true) {
+        //         let collide = satCollide(this.activeShape, go.activeShape);
+        //         if (collide) {
+        //             this.rotation = tempRotation;
+        //             break;
+        //         }
+        //     }
+        // }
+
+        // if (this.engine == "OFF") {
+        //     if (this.speed > 0) {
+        //         this.speed -= this.pushSpeed;
+        //     } else if (this.speed < 0) {
+        //         this.speed += this.pushSpeed;
+        //     }
+        // }
 
         this.weapon.update();
+        
         return true;
     }
 
@@ -148,12 +219,21 @@ export class HeavyTankBody extends GameObject {
 
         ctx.fillStyle = "black";
         ctx.save();
-
+        ctx.fillStyle = "white";
         const doPosition = GameObjectsManager.camera.doPosition(this.posX, this.posY, 1, 1);
         ctx.translate(doPosition.x + this.width / 2, doPosition.y + this.height / 2);
+
+        ctx.font = "15px Consolas";
+        ctx.strokeStyle = "white";
+        ctx.strokeText(this.player.username, -50, -80);
+        
         ctx.rotate(this.rotation);
         ctx.translate(-this.width / 2, -this.height / 2);
         ctx.drawImage(sprite.image, 0, 0, this.width, this.height);
+        
+        ctx.rotate(-this.rotation);
+        
+
         ctx.restore();
         
         this.weapon.render();

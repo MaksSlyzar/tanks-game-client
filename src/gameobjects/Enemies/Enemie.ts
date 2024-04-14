@@ -27,30 +27,30 @@ class Enemie extends GameObject {
     }
 
     update(): boolean {
-        this.activeShape = updateShape(this.posX + this.width / 2, this.posY + this.height / 2, this.rotation, this.shape);
+        // this.activeShape = updateShape(this.posX + this.width / 2, this.posY + this.height / 2, this.rotation, this.shape);
 
-        for (let go of GameObjectsManager.gameObjects) {
-            if (go.collidingObject == true && go.tag == "bullet") {
-                let collide = satCollide(this.activeShape, go.activeShape);
-                if (collide) {
-                    this.fillColor = "yellow"
-                    console.log("YE")
-                    setTimeout(() => {this.fillColor = "red"}, 500)
-                    break;
-                }
-            }
-        }
-        if (this.movement)
-            this.posX += 7;
-        else 
-            this.posX -= 7;
+        // for (let go of GameObjectsManager.gameObjects) {
+        //     if (go.collidingObject == true && go.tag == "bullet") {
+        //         let collide = satCollide(this.activeShape, go.activeShape);
+        //         if (collide) {
+        //             this.fillColor = "yellow"
+        //             console.log("YE")
+        //             setTimeout(() => {this.fillColor = "red"}, 500)
+        //             break;
+        //         }
+        //     }
+        // }
+        // if (this.movement)
+        //     this.posX += 7;
+        // else 
+        //     this.posX -= 7;
 
-        if (this.posX > 2000) {
-            this.movement = false;
-        }
-        if (this.posX < 100) {
-            this.movement = true;
-        }
+        // if (this.posX > 2000) {
+        //     this.movement = false;
+        // }
+        // if (this.posX < 100) {
+        //     this.movement = true;
+        // }
         return true;
     }
 

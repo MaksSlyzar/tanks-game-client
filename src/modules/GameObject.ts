@@ -2,6 +2,7 @@ import CanvasManager from "../managers/CanvasManager";
 import { Vector2d } from "./SAT";
 
 export class GameObject {
+    id: number;
     posX: number;
     posY: number;
     rotation: number;
