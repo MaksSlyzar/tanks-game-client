@@ -1,9 +1,10 @@
 import SIOManager from "../../managers/SIOManager";
 import { View } from "../../modules/View";
+import { getElementById } from "../MainGui";
 
 class CreateGameView extends View {
     constructor () {
-        const elem = document.getElementById("CreateGameView") as HTMLDivElement;
+        const elem = getElementById<HTMLDivElement>("CreateGameView");
         super("CreateGame", elem);
 
         const createButton = elem.getElementsByTagName("button")[0] as HTMLButtonElement;

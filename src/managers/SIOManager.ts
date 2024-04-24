@@ -5,12 +5,6 @@ class SIOManager {
     socket: Socket;
     username: string;
     playerId: number;
-    players: Array<Player>;
-    ownPlayer: Player;
-
-    getPlayerById(id: number) {
-        return this.players.find((player) => player.id == id);
-    }
 
     constructor() {
         const serverUrls = {
@@ -42,6 +36,10 @@ class SIOManager {
         this.socket.on("hello", (data) => {
             console.log(data);
         });
+    }
+
+    addConnectCallback(cb: () => void) {
+        this.connectCallbacks.push(cb);
     }
 
     connect() {
