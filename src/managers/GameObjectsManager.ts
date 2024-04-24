@@ -1,4 +1,5 @@
 import Box from "../gameobjects/Box/Box";
+import { BaseBuild, Build } from "../gameobjects/Builds/Builds";
 import Camera from "../gameobjects/Camera/Camera";
 import Enemie from "../gameobjects/Enemies/Enemie";
 import Grid from "../gameobjects/Grid";
@@ -26,7 +27,12 @@ interface CreateGameObjectsData {
     }>;
 
     gameObjects: {
-        enemies: Array<{}>;
+        enemies: Array<{
+            id: number;
+            posX: number;
+            posY: number;
+            rotation: number;
+        }>;
         projectiles: Array<{}>;
         tankBodies: Array<{
             id: number;
@@ -38,6 +44,14 @@ interface CreateGameObjectsData {
             weapon: {
                 rotation: number;
             };
+        }>;
+        builds: Array<{
+            id: number;
+            posX: number;
+            posY: number;
+            hp: number;
+            maxHp: number;
+            _type: "none" | "base";
         }>;
     };
 }
@@ -58,7 +72,13 @@ interface SyncObjectsData {
     }>;
 
     gameObjects: {
-        enemies: Array<{}>;
+        enemies: Array<{
+            id: number;
+            posX: number;
+            posY: number;
+            rotation: number;
+            _type: "test" | "none";
+        }>;
         projectiles: Array<{
             posX: number;
             posY: number;
@@ -80,6 +100,15 @@ interface SyncObjectsData {
             hp: number;
             maxHp: number;
         }>;
+
+        builds: Array<{
+            id: number;
+            posX: number;
+            posY: number;
+            hp: number;
+            maxHp: number;
+            _type: "none" | "base";
+        }>;
     };
 }
 
@@ -89,6 +118,7 @@ class GameObjectsManager {
         projectiles: Array<GameObject>;
         enemies: Array<GameObject>;
         other: Array<GameObject>;
+        builds: Array<Build>;
     };
     camera: Camera;
     initedGame: boolean;
@@ -103,27 +133,8 @@ class GameObjectsManager {
             projectiles: [],
             enemies: [],
             other: [new Grid()],
+            builds: [],
         };
-        // const player = new Player();
-        // this.gameObjects.push(player);
-
-        // for (let i = 0; i < 20; i++) {
-        //     for (let j = 0; j < 20; j++) {
-        //         if (i == 0 || j == 0 || j == 19 || i == 19) {
-        //             if ((i == 5 && j == 0) || (i == 6 && j == 0)) continue;
-        //             const box1 = new Box();
-        //             box1.posX = 50 * i;
-        //             box1.posY = j * 50 + 300;
-        //             this.gameObjects.other.push(box1);
-        //         }
-        //     }
-        // }
-
-        // this.gameObjects.push(new Enemie());
-        // const en1 = new Enemie();
-        // en1.setY(800);
-        // en1.posX = 1000;
-        // this.gameObjects.push(en1);
 
         SIOManager.socket.on("sendSyncData", (data: SyncObjectsData) => {
             const destroyProjectiles = this.gameObjects.projectiles.map(
@@ -131,7 +142,62 @@ class GameObjectsManager {
                     return { id: _projectile.id, index: index };
                 }
             );
-            // console.log(data.gameObjects.projectiles);
+
+            data.gameObjects.enemies.map((enemyData) => {
+                const { id, _type, posX, posY, rotation } = enemyData;
+
+                let enemy = this.gameObjects.enemies.find(
+                    (_enemy) => _enemy.id == id
+                ) as Enemie;
+
+                if (enemy == null) {
+                    switch (_type) {
+                        case "test":
+                            enemy = new Enemie();
+                            break;
+
+                        default:
+                            return;
+                    }
+
+                    enemy.id = id;
+                    enemy.posX = posX;
+                    enemy.posY = posY;
+                    this.gameObjects.enemies.push(enemy);
+                }
+
+                enemy.targetX = posX;
+                enemy.targetY = posY;
+            });
+
+            data.gameObjects.builds.map((buildData) => {
+                const { id, _type, posX, posY, hp, maxHp } = buildData;
+
+                let build = this.gameObjects.builds.find(
+                    (_build) => _build.id == id
+                );
+
+                if (build == null) {
+                    switch (_type) {
+                        case "base":
+                            build = new BaseBuild();
+                            break;
+
+                        case "none":
+                            return;
+                            break;
+                    }
+
+                    build.id = id;
+
+                    this.gameObjects.builds.push(build);
+                }
+
+                build.hp = hp;
+                build.maxHp = maxHp;
+                build.posX = posX;
+                build.posY = posY;
+            });
 
             data.gameObjects.projectiles.map((projectileData) => {
                 let projectile = this.gameObjects.projectiles.find(
@@ -140,8 +206,6 @@ class GameObjectsManager {
 
                 if (projectile == null) {
                     projectile = new Projectile();
-                    projectile.id = projectileData.id;
-
                     const tankBody = this.gameObjects.tankBodies.find(
                         (_tankBody) => _tankBody.id == projectileData.tankBodyId
                     ) as HeavyTankBody;
@@ -157,6 +221,9 @@ class GameObjectsManager {
                         spawnX + tankBody.posX + tankBody.width / 2;
                     projectile.posY =
                         spawnY + tankBody.posY + tankBody.height / 2;
+                    projectile.rotation = projectileData.rotation;
+
+                    projectile.id = projectileData.id;
 
                     this.gameObjects.projectiles.push(projectile);
                 }
@@ -169,6 +236,7 @@ class GameObjectsManager {
                     destroyProjectiles.splice(destroy, 1);
                 }
 
+                projectile.rotation = projectileData.rotation;
                 projectile.targetX = projectileData.posX;
                 projectile.targetY = projectileData.posY;
             });
@@ -194,13 +262,13 @@ class GameObjectsManager {
 
                 if (tankBody == null) return; // create new tankBody
 
-                tankBody.hp = tankBodyData.hp;
+                tankBody.targetHp = tankBodyData.hp;
                 tankBody.maxHp = tankBodyData.maxHp;
 
                 tankBody.targetX = tankBodyData.posX;
                 tankBody.targetY = tankBodyData.posY;
                 tankBody.rotation = tankBodyData.rotation;
-                tankBody.weapon.rotation = tankBodyData.weapon.rotation;
+                tankBody.weapon.targetRotation = tankBodyData.weapon.rotation;
                 tankBody.collison = tankBodyData.collision;
             });
         });
@@ -312,10 +380,11 @@ class GameObjectsManager {
         if (this.initedGame == false) return;
 
         const gameObjects = [
-            ...this.gameObjects.enemies,
             ...this.gameObjects.other,
+            ...this.gameObjects.enemies,
             ...this.gameObjects.tankBodies,
             ...this.gameObjects.projectiles,
+            ...this.gameObjects.builds,
         ];
         const renderObjects = gameObjects.map((gameObject) => {
             return gameObject.render();

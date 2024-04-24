@@ -17,9 +17,11 @@ export class TankBody extends GameObject {
     hp: number;
     maxHp: number;
     collison: boolean;
+    targetHp: number;
 
     constructor() {
         super();
+        this.targetHp = 100;
 
         this.hp = 40;
         this.maxHp = 100;
@@ -33,7 +35,7 @@ export class TankBody extends GameObject {
         const ctx = CanvasManager.context;
 
         const width = 100;
-        const height = 10;
+        const height = 5;
 
         ctx.fillStyle = "black";
 
@@ -84,6 +86,8 @@ export class HeavyTankBody extends TankBody {
     }
 
     update() {
+        this.hp += (this.targetHp - this.hp) * 0.3;
+
         if (GameObjectsManager.deltaTime > 1) return;
         this.pushSpeed = this.standartPushSpeed * GameObjectsManager.deltaTime;
 

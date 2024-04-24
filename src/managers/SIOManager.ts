@@ -14,11 +14,12 @@ class SIOManager {
 
     constructor() {
         const serverUrls = {
-            local: "http://localhost:3040",
+            local: "http://localhost:3050",
             replit: "https://tanks.pagekite.me/",
             network: "http://192.168.0.102:3040",
             ngrok: "https://3c95-109-207-118-219.ngrok-free.app",
             tunnel: "https://terrain-colon-oil-hundreds.trycloudflare.com/",
+            render: "https://tanks-game-server.onrender.com/",
         };
 
         //ngrok
@@ -32,7 +33,7 @@ class SIOManager {
         //     .then((data) => console.log(data))
         //     .catch((err) => console.log(err, "ERROR"));
 
-        this.socket = io(serverUrls.tunnel, {});
+        this.socket = io(serverUrls.local, {});
 
         this.socket.on("connect", () => {
             console.log("Connection successfull");

@@ -7,13 +7,17 @@ class Enemie extends GameObject {
     movement: boolean;
     width: number;
     height: number;
+    targetX: number;
+    targetY: number;
     collidingObject: boolean;
     fillColor: string;
 
-    constructor () {
+    constructor() {
         super();
         this.posY = 700;
         this.posX = 700;
+        this.targetX = 0;
+        this.targetY = 0;
         this.movement = true;
         this.collidingObject = true;
         this.width = 20;
@@ -22,7 +26,7 @@ class Enemie extends GameObject {
         this.shape = quadColliderMesh(this.width, this.height);
     }
 
-    setY (y: number) {
+    setY(y: number) {
         this.posY = y;
     }
 
@@ -42,7 +46,7 @@ class Enemie extends GameObject {
         // }
         // if (this.movement)
         //     this.posX += 7;
-        // else 
+        // else
         //     this.posX -= 7;
 
         // if (this.posX > 2000) {
@@ -51,6 +55,10 @@ class Enemie extends GameObject {
         // if (this.posX < 100) {
         //     this.movement = true;
         // }
+
+        this.posX += (this.targetX - this.posX) * 0.2;
+        this.posY += (this.targetY - this.posY) * 0.2;
+
         return true;
     }
 
@@ -58,9 +66,14 @@ class Enemie extends GameObject {
         const ctx = CanvasManager.context;
         ctx.fillStyle = this.fillColor;
 
-        const doPosition = GameObjectsManager.camera.doPosition(this.posX, this.posY, 1, 1);
+        const doPosition = GameObjectsManager.camera.doPosition(
+            this.posX,
+            this.posY,
+            1,
+            1
+        );
 
-        ctx.fillRect(doPosition.x, doPosition.y, this.width, this.height);
+        ctx.fillRect(doPosition.x, doPosition.y, 50, 50);
 
         return true;
     }

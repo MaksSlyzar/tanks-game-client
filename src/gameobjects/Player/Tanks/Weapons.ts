@@ -13,11 +13,13 @@ export class HeavyWeapon extends GameObject {
     rotation: number;
     dx: number;
     dy: number;
+    targetRotation: number;
 
     constructor(tankBody: HeavyTankBody) {
         super();
         this.rotation = 0.09;
         this.tankBody = tankBody;
+        this.targetRotation = 0;
 
         CanvasManager.events.setOnKeyUp((code) => this.shoot(code));
         CanvasManager.events.setLeftOnClick((event) => this.shoot(32));
@@ -54,11 +56,11 @@ export class HeavyWeapon extends GameObject {
         // ctx.fillRect(90 / 2 * (-1) + 40, 40 / 2 * (-1) + 15, 90, 10);
 
         ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(1000, 0);
-        ctx.lineWidth = 0.4;
-        ctx.strokeStyle = "red";
-        ctx.stroke();
+        // ctx.moveTo(0, 0);
+        // ctx.lineTo(1000, 0);
+        // ctx.lineWidth = 0.4;
+        // ctx.strokeStyle = "red";
+        // ctx.stroke();
 
         ctx.drawImage(
             sprite.image,
@@ -106,6 +108,12 @@ export class HeavyWeapon extends GameObject {
             this.tankBody.posY -
             40 +
             GameObjectsManager.camera.posY;
+
+        // (this.targetX - this.posX) * coef
+        this.rotation = (this.targetRotation - this.rotation) * 0.1;
+
+        if (Math.abs(this.rotation) - Math.abs(this.targetRotation) < 0.02)
+            this.rotation = this.targetRotation;
 
         // const sendData = {
         //     dx: this.dx,

@@ -3,67 +3,77 @@ import { View } from "../modules/View";
 import MainGui from "./MainGui";
 
 class AuthorizationView extends View {
-  constructor() {
-    const elem = document.getElementsByClassName(
-      "Authorization"
-    )[0] as HTMLDivElement;
+    constructor() {
+        const elem = document.getElementsByClassName(
+            "Authorization"
+        )[0] as HTMLDivElement;
 
-    const registerButton = document.getElementById(
-      "registerButton"
-    ) as HTMLButtonElement;
-    const usernameInput = elem.getElementsByClassName(
-      "usernameInput"
-    )[0] as HTMLInputElement;
+        const registerButton = document.getElementById(
+            "registerButton"
+        ) as HTMLButtonElement;
+        const usernameInput = elem.getElementsByClassName(
+            "usernameInput"
+        )[0] as HTMLInputElement;
 
-    super("Authorization", elem);
+        super("Authorization", elem);
 
-    registerButton.onclick = () => {
-      const value = usernameInput.value;
+        usernameInput.onkeyup = (event) => {
+            if (event.keyCode == 13) {
+                const value = usernameInput.value;
 
-      if (value.length >= 6) {
-        SIOManager.socket.emit("register", { username: value });
-      }
-    };
+                if (value.length >= 4) {
+                    SIOManager.socket.emit("register", { username: value });
+                }
+            }
+        };
 
-    SIOManager.socket.on("authSuccessfully", playerNetwork => {
-      const { token, gameSession, id } = playerNetwork;
+        registerButton.onclick = () => {
+            const value = usernameInput.value;
 
-      SIOManager.playerId = id;
+            if (value.length >= 4) {
+                SIOManager.socket.emit("register", { username: value });
+            }
+        };
 
-      SIOManager.username = playerNetwork.username;
+        SIOManager.socket.on("authSuccessfully", (playerNetwork) => {
+            const { token, gameSession, id } = playerNetwork;
 
-      localStorage.setItem("token", token);
+            SIOManager.playerId = id;
 
-      switch (gameSession) {
-        case "room":
-          MainGui.changeView("Room");
-        break;
+            SIOManager.username = playerNetwork.username;
 
-        case "menu":
-          MainGui.changeView("MainMenu");
-        break;
+            localStorage.setItem("token", token);
 
-        // case ""
-      }
-      //   MainGui.changeView("MainMenu");
-      // else
-      //   MainGui.changeView("Game")
-    });
+            switch (gameSession) {
+                case "room":
+                    MainGui.changeView("Room");
+                    break;
 
-    SIOManager.socket.on("authFailed", error => {
-      // this.show();
-      console.log(error)
-    });
+                case "menu":
+                    MainGui.changeView("MainMenu");
+                    break;
 
-    const token = localStorage.getItem("token");
-    console.log(token)
-    
-    if (token != null) {
-      SIOManager.socket.emit("authByToken", token);
+                // case ""
+            }
+            //   MainGui.changeView("MainMenu");
+            // else
+            //   MainGui.changeView("Game")
+        });
+
+        SIOManager.socket.on("authFailed", (error) => {
+            // this.show();
+            console.log(error);
+        });
+
+        const token = localStorage.getItem("token");
+        console.log(token);
+
+        if (token != null) {
+            SIOManager.socket.emit("authByToken", token);
+        }
+
+        this.show();
     }
-
-    this.show();
-  }
 }
 
 export default AuthorizationView;
