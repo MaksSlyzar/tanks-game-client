@@ -29,9 +29,18 @@
         }
     }
 
+    &__exitRoom {
+        button {
+            width: 100px;
+            background-color: rgb(0, 160, 172);
+            color: white;
+        }
+    }
+
     &__ReadyButton {
         padding: 20px;
         text-align: center;
+
         button {
             background-color: gray;
             width: 100px;

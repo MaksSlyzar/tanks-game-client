@@ -1,5 +1,6 @@
 import SIOManager from "../../managers/SIOManager";
 import { View } from "../../modules/View";
+import MainGui from "../MainGui";
 
 class RoomListView extends View {
     activeRoom: string;
@@ -20,6 +21,7 @@ class RoomListView extends View {
         }
 
         SIOManager.socket.on("updateRoomList", data => {
+            MainGui.changeView("MainMenu");
             usernameLabel.innerText = SIOManager.username;
 
             const { roomsData } = data;

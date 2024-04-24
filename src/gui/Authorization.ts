@@ -1,21 +1,21 @@
 import SIOManager from "../managers/SIOManager";
 import { View } from "../modules/View";
-import MainGui from "./MainGui";
+import MainGui, { getElementByClass, getElementById } from "./MainGui";
+import ServerInfoView from "./ServerInfo";
 
 class AuthorizationView extends View {
-  constructor() {
-    const elem = document.getElementsByClassName(
-      "Authorization"
-    )[0] as HTMLDivElement;
+  serverInfoView: ServerInfoView;
 
-    const registerButton = document.getElementById(
-      "registerButton"
-    ) as HTMLButtonElement;
-    const usernameInput = elem.getElementsByClassName(
-      "usernameInput"
-    )[0] as HTMLInputElement;
+  constructor() {
+    const elem = getElementByClass<HTMLDivElement>("Authorization");
+    const registerButton = getElementById<HTMLButtonElement>("registerButton");
+    const usernameInput = getElementByClass<HTMLInputElement>("usernameInput");
 
     super("Authorization", elem);
+
+    this.serverInfoView = new ServerInfoView();
+
+    this.serverInfoView.show();
 
     registerButton.onclick = () => {
       const value = usernameInput.value;
@@ -26,6 +26,7 @@ class AuthorizationView extends View {
     };
 
     SIOManager.socket.on("authSuccessfully", playerNetwork => {
+      this.serverInfoView.hide();
       const { token, gameSession, id } = playerNetwork;
 
       SIOManager.playerId = id;
@@ -42,16 +43,10 @@ class AuthorizationView extends View {
         case "menu":
           MainGui.changeView("MainMenu");
         break;
-
-        // case ""
       }
-      //   MainGui.changeView("MainMenu");
-      // else
-      //   MainGui.changeView("Game")
     });
 
     SIOManager.socket.on("authFailed", error => {
-      // this.show();
       console.log(error)
     });
 

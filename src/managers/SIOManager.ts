@@ -4,6 +4,7 @@ class SIOManager {
     socket: Socket;
     username: string;
     playerId: number;
+    connectCallbacks: Array<() => void> = [];
     
     constructor () {
         const serverUrls = {
@@ -16,6 +17,7 @@ class SIOManager {
 
         this.socket.on("connect", () => {
             console.log("Connection successfull");
+            this.connect();
         })
 
         this.socket.on("hello", data => {
@@ -23,7 +25,12 @@ class SIOManager {
         });
     }
 
+    addConnectCallback (cb: () => void) {
+        this.connectCallbacks.push(cb);
+    }
+
     connect () {
+        this.connectCallbacks.map(cb => cb());
         return true;
     }
 }

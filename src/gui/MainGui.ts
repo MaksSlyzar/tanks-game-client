@@ -3,8 +3,20 @@ import MainMenuView from "./MainMenuView/MainMenuView";
 import SettingsView from "./SettingsView";
 import { View } from "../modules/View";
 import AuthorizationView from "./Authorization";
-import CreateGameView from "./MainMenuView/CreateGameView";
 import RoomView from "./RoomView";
+
+export function getElementById <elementType> (elementId: string): elementType {
+  const element = document.getElementById(elementId) as elementType;
+  return element;
+}
+
+export function getElementByClass <elementType> (elementClass: string, parrentElement?: HTMLElement): elementType {
+  const element = parrentElement
+  ? parrentElement.getElementsByClassName(elementClass)[0] as elementType 
+  : document.getElementsByClassName(elementClass)[0] as elementType;
+
+  return element;
+}
 
 class MainGui {
   views: Array<View> = [];
@@ -17,7 +29,6 @@ class MainGui {
     this.appendView(new RoomView());
 
     this.changeView("Authorization");
-    // this.gameViewDebugMode();
   }
 
   gameViewDebugMode() {

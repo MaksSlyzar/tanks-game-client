@@ -1,15 +1,14 @@
-import MainGui from "./MainGui";
+import MainGui, { getElementById } from "./MainGui";
 import MainMenuView from "./MainMenuView/MainMenuView";
 import { View } from "../modules/View";
 const settingsIcon = require("../assets/settings-icon.svg");
-console.log(settingsIcon.default, "SETTINGS ICON")
 
 class SettingsView extends View {
     constructor () {
-        const elem = document.getElementById("Settings") as HTMLDivElement;
+        const elem = getElementById<HTMLDivElement>("Settings");
         super("Settings", elem);
 
-        const button = document.getElementById("showSettingsButton") as HTMLButtonElement;
+        const button = getElementById<HTMLButtonElement>("showSettingsButton");
         const image = document.createElement("img");
         
         image.src = settingsIcon.default;
