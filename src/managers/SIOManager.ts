@@ -5,6 +5,7 @@ class SIOManager {
     socket: Socket;
     username: string;
     playerId: number;
+    connectCallbacks: Array<() => void> = [];
 
     constructor() {
         const serverUrls = {
