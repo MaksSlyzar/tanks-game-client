@@ -5,16 +5,22 @@ import { getElementByClass } from "./MainGui";
 class ServerInfoView extends View {
     connectionDiv: HTMLDivElement;
 
-    constructor () {
-        const elem = document.getElementById("ServerInfoView") as HTMLDivElement;
+    constructor() {
+        const elem = document.getElementById(
+            "ServerInfoView"
+        ) as HTMLDivElement;
         super("ServerInfo", elem);
 
-        this.connectionDiv = getElementByClass<HTMLDivElement>("connection", elem);
+        this.connectionDiv = getElementByClass<HTMLDivElement>(
+            "connection",
+            elem
+        );
 
         SIOManager.addConnectCallback(() => this.onConnect());
     }
 
-    onConnect () {
+    onConnect() {
+        console.log("YES");
         this.connectionDiv.innerText = "Успішно з'єднано з сервером";
     }
 }

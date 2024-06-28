@@ -6,9 +6,9 @@ import AssetsManager from "./managers/AssetsManager";
 
 AssetsManager.loadImages();
 
-SIOManager.connect();
+SIOManager.run();
 
 window.onload = () => {
-    console.log(MainGui)
+    console.log(MainGui);
     const game = new Game();
-}
+};

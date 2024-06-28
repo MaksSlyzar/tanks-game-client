@@ -1,31 +1,25 @@
 import CanvasEvents from "./CanvasEvents";
-
 interface KeyValue {
-    [key: string]: boolean
-};
-
+    [key: string]: boolean;
+}
 class CanvasManager {
-    public context: CanvasRenderingContext2D|null;
+    public context: CanvasRenderingContext2D | null;
     public canvas: HTMLCanvasElement;
-    public gameDiv: HTMLElement|null;
-    public mouse: { x: number, y: number };
+    public gameDiv: HTMLElement | null;
+    public mouse: { x: number; y: number };
     public keysString: KeyValue = {};
     public events: CanvasEvents;
-    // public buildPanel: BuildPanel|null = null;
-
-    denyKeys () {
+    denyKeys() {
         this.events.keyEventsOn = false;
         this.keysString = {};
     }
-
-    allowKeys () {
+    allowKeys() {
         this.events.keyEventsOn = true;
     }
-
-    constructor () {
+    constructor() {
         this.mouse = {
             x: 0,
-            y: 0
+            y: 0,
         };
         this.canvas = document.getElementById("canvas") as HTMLCanvasElement;
         this.events = new CanvasEvents(this.canvas);
@@ -34,46 +28,36 @@ class CanvasManager {
 
         this.setCanvasEvents();
         this.windowResizeUpdate();
-        // this.buildPanel = new BuildPanel(this, buildController);
     }
 
-    setCanvasEvents () {
+    setCanvasEvents() {
         window.onresize = this.windowResizeUpdate;
         window.onmousemove = (evt) => {
             this.mouse.x = evt.clientX;
             this.mouse.y = evt.clientY;
         };
         window.onkeydown = (evt) => {
-            if (!this.events.keyEventsOn)
-                return;
+            if (!this.events.keyEventsOn) return;
 
             this.keysString[evt.key] = true;
         };
         window.onkeyup = (evt) => {
-
             this.events.keyUpCallbacks.map((cb) => cb(evt.keyCode));
 
-            if (!this.keysString[evt.key])
-                return;
+            if (!this.keysString[evt.key]) return;
             this.keysString[evt.key] = false;
         };
     }
-
-    windowResizeUpdate () {
+    windowResizeUpdate() {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
     }
-
-    clear () {
+    clear() {
         this.context?.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
-
-    keyDown (char: string) {
+    keyDown(char: string) {
         return this.keysString[char];
     }
-
-    start() {
-
-    }
+    start() {}
 }
 export default new CanvasManager();

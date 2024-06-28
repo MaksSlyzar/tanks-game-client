@@ -1,24 +1,19 @@
 import CanvasManager from "./managers/CanvasManager";
 import GameObjectsManager from "./managers/GameObjectsManager";
-
-
 class Game {
     currentTime: Date;
     diff: number;
     deltaTime: number;
     lastDate: Date;
     fps: number;
-
     constructor () {
         const canvas = document.getElementById("canvas") as HTMLCanvasElement;
         this.lastDate = new Date();
         this.start();
     }
-
     start () {
         this.update();
     }
-
     update () {
         this.currentTime = new Date();
         this.diff = this.currentTime.getTime() / 1000 - this.lastDate.getTime() / 1000;
@@ -31,5 +26,4 @@ class Game {
         requestAnimationFrame(this.update.bind(this));
     }
 }
-
 export default Game;

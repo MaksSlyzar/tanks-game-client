@@ -2,28 +2,24 @@ export class View {
     name: string;
     mainDiv: HTMLDivElement;
     private visibility: boolean;
-
-    constructor (name: string, elem: HTMLDivElement) {
+    constructor(name: string, elem: HTMLDivElement) {
         this.name = name;
         this.visibility = false;
         this.mainDiv = elem;
-
         this.hide();
     }
-
-    hide () {
+    hide() {
         this.mainDiv.classList.add("hidden");
     }
 
-    show () {
+    show() {
         this.mainDiv.classList.remove("hidden");
     }
 
-    getVisibility () {
+    onShow() {}
+
+    getVisibility() {
         return this.visibility;
     }
-
-    update () {
-        
-    }
+    update() {}
 }

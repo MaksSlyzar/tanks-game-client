@@ -1,5 +1,6 @@
 import { io, Socket } from "socket.io-client";
 import { Player } from "../gameobjects/Player/Player";
+import MainGui from "../gui/MainGui";
 
 class SIOManager {
     socket: Socket;
@@ -17,28 +18,17 @@ class SIOManager {
         const serverUrls = {
             local: "http://localhost:3050",
             replit: "https://tanks.pagekite.me/",
-            network: "http://192.168.0.102:3040",
+            network: "http://192.168.0.102:3050",
             ngrok: "https://3c95-109-207-118-219.ngrok-free.app",
             tunnel: "https://terrain-colon-oil-hundreds.trycloudflare.com/",
             render: "https://tanks-game-server.onrender.com/",
         };
 
-        //ngrok
-        // fetch(serverUrls.ngrok, {
-        //     method: "get",
-        //     headers: new Headers({
-        //         "ngrok-skip-browser-warning": "12332",
-        //     }),
-        // })
-        //     .then((response) => response.json())
-        //     .then((data) => console.log(data))
-        //     .catch((err) => console.log(err, "ERROR"));
-
         this.socket = io(serverUrls.local, {});
 
         this.socket.on("connect", () => {
             console.log("Connection successfull");
-            this.connect();
+            this.onConnect();
         });
 
         this.socket.on("hello", (data) => {
@@ -46,11 +36,14 @@ class SIOManager {
         });
     }
 
+    run() {}
+
     addConnectCallback(cb: () => void) {
+        console.log(cb);
         this.connectCallbacks.push(cb);
     }
 
-    connect() {
+    onConnect() {
         this.connectCallbacks.map((cb) => cb());
         return true;
     }

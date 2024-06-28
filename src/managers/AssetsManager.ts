@@ -48,8 +48,18 @@ class AssetsManager {
                 loaded: false,
             },
             {
+                src: "base-build-inside.png",
+                name: "base-build-inside",
+                loaded: false,
+            },
+            {
                 src: "projectile.png",
                 name: "projectile",
+                loaded: false,
+            },
+            {
+                src: "gold.png",
+                name: "gold",
                 loaded: false,
             },
         ].map((spriteName) => {

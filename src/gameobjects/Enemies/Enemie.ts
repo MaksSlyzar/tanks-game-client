@@ -11,6 +11,7 @@ class Enemie extends GameObject {
     targetY: number;
     collidingObject: boolean;
     fillColor: string;
+    targetHp: number = 0;
 
     constructor() {
         super();
@@ -20,8 +21,8 @@ class Enemie extends GameObject {
         this.targetY = 0;
         this.movement = true;
         this.collidingObject = true;
-        this.width = 20;
-        this.height = 20;
+        this.width = 30;
+        this.height = 30;
         this.fillColor = "red";
         this.shape = quadColliderMesh(this.width, this.height);
     }
@@ -31,30 +32,7 @@ class Enemie extends GameObject {
     }
 
     update(): boolean {
-        // this.activeShape = updateShape(this.posX + this.width / 2, this.posY + this.height / 2, this.rotation, this.shape);
-
-        // for (let go of GameObjectsManager.gameObjects) {
-        //     if (go.collidingObject == true && go.tag == "bullet") {
-        //         let collide = satCollide(this.activeShape, go.activeShape);
-        //         if (collide) {
-        //             this.fillColor = "yellow"
-        //             console.log("YE")
-        //             setTimeout(() => {this.fillColor = "red"}, 500)
-        //             break;
-        //         }
-        //     }
-        // }
-        // if (this.movement)
-        //     this.posX += 7;
-        // else
-        //     this.posX -= 7;
-
-        // if (this.posX > 2000) {
-        //     this.movement = false;
-        // }
-        // if (this.posX < 100) {
-        //     this.movement = true;
-        // }
+        this.hp += (this.targetHp - this.hp) * 0.3;
 
         this.posX += (this.targetX - this.posX) * 0.2;
         this.posY += (this.targetY - this.posY) * 0.2;
@@ -73,7 +51,32 @@ class Enemie extends GameObject {
             1
         );
 
-        ctx.fillRect(doPosition.x, doPosition.y, 50, 50);
+        ctx.save();
+        ctx.fillStyle = "white";
+        ctx.translate(
+            doPosition.x + this.width / 2,
+            doPosition.y + this.height / 2
+        );
+
+        ctx.rotate(this.rotation);
+        ctx.translate(-this.width / 2, -this.height / 2);
+        ctx.fillRect(0, 0, this.width, this.height);
+
+        ctx.rotate(-this.rotation);
+
+        ctx.translate(this.width / 2, this.height / 2);
+
+        ctx.restore();
+
+        ctx.save();
+        ctx.translate(
+            doPosition.x + this.width / 2,
+            doPosition.y + this.height / 2
+        );
+
+        this.renderHPBar();
+
+        ctx.restore();
 
         return true;
     }

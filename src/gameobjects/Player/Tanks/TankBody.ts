@@ -12,45 +12,36 @@ import {
 } from "../../../modules/SAT";
 import SIOManager from "../../../managers/SIOManager";
 import { Player } from "../Player";
-
 export class TankBody extends GameObject {
     hp: number;
     maxHp: number;
     collison: boolean;
     targetHp: number;
-
+    isOwn: boolean = false;
     constructor() {
         super();
         this.targetHp = 100;
-
         this.hp = 40;
         this.maxHp = 100;
     }
-
     update() {
         return true;
     }
-
     renderHPBar() {
         const ctx = CanvasManager.context;
-
         const width = 100;
-        const height = 5;
-
-        ctx.fillStyle = "black";
-
+        const height = 8;
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "white";
         ctx.rect(-width / 2, -60, width, height);
         ctx.fillStyle = "black";
         ctx.fillRect(-width / 2, -60, (this.hp / this.maxHp) * 100, height);
-
         ctx.stroke();
     }
-
     render() {
         return true;
     }
 }
-
 export class HeavyTankBody extends TankBody {
     weapon: HeavyWeapon;
     posX: number;
@@ -68,9 +59,9 @@ export class HeavyTankBody extends TankBody {
     targetX: number = 0;
     targetY: number = 0;
     player: Player;
-
     constructor(playerGameObject: Player) {
         super();
+        this.isOwn = false;
         this.player = playerGameObject;
         this.speed = 0;
         this.maxSpeed = 4;
@@ -84,31 +75,27 @@ export class HeavyTankBody extends TankBody {
         this.activeShape = [];
         this.shape = quadColliderMesh(this.width, this.height);
     }
-
     update() {
+        this.activeShape = updateShape(
+            this.posX + this.width / 2,
+            this.posY + this.height / 2,
+            this.rotation,
+            this.shape
+        );
         this.hp += (this.targetHp - this.hp) * 0.3;
-
         if (GameObjectsManager.deltaTime > 1) return;
         this.pushSpeed = this.standartPushSpeed * GameObjectsManager.deltaTime;
-
         const coef = this.collison ? 0.3 : 0.1;
         this.posX += (this.targetX - this.posX) * coef;
         this.posY += (this.targetY - this.posY) * coef;
-
         this.weapon.update();
-
         return true;
     }
-
     network(data: any): void {}
-
     render() {
         const ctx = CanvasManager.context;
-
         const sprite = AssetsManager.sprites["tank-body"];
-
         if (sprite == null) return false;
-
         ctx.fillStyle = "black";
         ctx.save();
         ctx.fillStyle = "white";
@@ -122,37 +109,29 @@ export class HeavyTankBody extends TankBody {
             doPosition.x + this.width / 2,
             doPosition.y + this.height / 2
         );
-
         ctx.rotate(this.rotation);
         ctx.translate(-this.width / 2, -this.height / 2);
         ctx.drawImage(sprite.image, 0, 0, this.width, this.height);
-
         ctx.rotate(-this.rotation);
-
         ctx.translate(this.width / 2, this.height / 2);
-
         ctx.restore();
-
         this.weapon.render();
-
         ctx.save();
         ctx.translate(
             doPosition.x + this.width / 2,
             doPosition.y + this.height / 2
         );
-
-        ctx.font = "15px Consolas";
-        ctx.strokeStyle = "white";
-        ctx.strokeText(this.player.username, -50, -80);
-
+        ctx.font = "bold 15px Arial";
+        ctx.strokeStyle = "black";
+        ctx.fillStyle = "white";
+        let textWidth = ctx.measureText(this.player.username).width;
+        let offsetX = Math.min(textWidth, 100) / 2;
+        ctx.fillText(this.player.username, -offsetX, -65, 100);
         this.renderHPBar();
-
         ctx.restore();
-
         return true;
     }
 }
-
 export class EngineerTankBody extends GameObject {
     engine: "UP" | "DOWN" | "OFF";
     rotation: number;
@@ -160,7 +139,7 @@ export class EngineerTankBody extends GameObject {
     maxSpeed: number;
     minSpeed: number;
     speed: number;
-
+    isOwn: boolean = false;
     constructor() {
         super();
         this.width = 115;
@@ -176,14 +155,10 @@ export class EngineerTankBody extends GameObject {
         this.shape = quadColliderMesh(this.width, this.height);
         this.height = 67;
     }
-
     render(): boolean {
         const ctx = CanvasManager.context;
-
         const sprite = AssetsManager.sprites["engineer"];
-
         if (sprite == null) return false;
-
         ctx.fillStyle = "black";
         ctx.save();
 
