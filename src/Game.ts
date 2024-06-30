@@ -8,6 +8,9 @@ class Game {
     fps: number;
     constructor () {
         const canvas = document.getElementById("canvas") as HTMLCanvasElement;
+        const gameElement = document.getElementById("game") as HTMLDivElement;
+        //gameElement.requestFullscreen();
+        //canvas.requestFullscreen();
         this.lastDate = new Date();
         this.start();
     }

@@ -1,115 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, maximum-scale=1"
-        />
-        <title>Platush RUSH</title>
-    </head>
-    <body>
-        <div id="game">
-            <div class="Authorization View">
-                <div class="header-auth">
-                    <div>Введіть нікнейм</div>
-                    <div>
-                        <input class="usernameInput" />
-                    </div>
-
-                    <div>
-                        <button id="registerButton">Увійти</button>
-                    </div>
-                </div>
+   <head>
+      <meta charset="UTF-8" />
+      <meta
+         name="viewport"
+         content="width=device-width, initial-scale=1, maximum-scale=1"
+         />
+      <title>Platush RUSH</title>
+   </head>
+   <body>
+      <div id="game">
+         <div class="OpenFullScreenButton">
+            <button id="OpenFullScreenButton">Open fullscreen</button>
+         </div>
+         <div class="Authorization View">
+            <div class="header-auth">
+               <div>Введіть нікнейм</div>
+               <div>
+                  <input class="usernameInput" />
+               </div>
+               <div>
+                  <button id="registerButton">Увійти</button>
+               </div>
             </div>
-
-            <div id="ServerInfoView" class="ServerInfo View">
-                <div class="connection">З'єднання з сервером...</div>
+         </div>
+         <div id="ServerInfoView" class="ServerInfo View">
+            <div class="connection">З'єднання з сервером...</div>
+         </div>
+         <div id="GameEnd" class="GameEnd View">
+            <div>Кінець гри. Вашу базу зламали.</div>
+            <div>
+               Вами ворогів знищено:
+               <span class="killedEnemiesStats"></span>
             </div>
-
-            <div id="GameEnd" class="GameEnd View">
-                <div>Кінець гри. Вашу базу зламали.</div>
-                <div>
-                    Вами ворогів знищено:
-                    <span class="killedEnemiesStats"></span>
-                </div>
-                <div class="RoomView__exitRoom">
-                    <div align="center">
-                        <button id="exitRoomButton">Вийти</button>
-                    </div>
-                </div>
+            <div class="RoomView__exitRoom">
+               <div align="center">
+                  <button id="exitRoomButton">Вийти</button>
+               </div>
             </div>
-
-            <div id="MainMenu" class="MainMenu">
-                <div class="Settings_button">
-                    <div id="showSettingsButton"></div>
-                </div>
-
-                <div class="View MainMenu__RoomListView" id="RoomListView">
-                    <div class="TextInfo">
-                        Виберіть потрібно вам гру, та увійдіть!
-                    </div>
-
-                    <div class="MainMenu__RoomListView-list">
-                        <div class="MainMenu__RoomListView-item">none</div>
-                    </div>
-
-                    <div class="MainMenu__RoomListView-join-form">
-                        <div class="MainMenu__RoomListView-join-form-username">
-                            MaksSlyzar
+         </div>
+         <div class="View CreateGameView" id="CreateGameView">
+            <div class="TextInfo">
+               Також ви можете створити свою гру тут
+            </div>
+            <div>
+               <label>Назва кімнати</label>
+               <input type="text" placeholder="Кімната 1" />
+            </div>
+            <div>
+               <button>Створити</button>
+            </div>
+         </div>
+         <div id="RoomView" class="RoomView View">
+            <div class="RoomView__exitRoom">
+               <button id="exitRoomButton">Вийти</button>
+            </div>
+            <div class="RoomView__game-name">Game name</div>
+            <div class="RoomView__Players">
+               <div class="RoomView__Players-label">Гравці:</div>
+               <div class="RoomView__Players-list"></div>
+            </div>
+            <div class="RoomView__SelectRole">
+               <div class="RoomView__SelectRole-label">Оберіть роль</div>
+               <div class="RoomView__SelectRole-list">
+                  <div class="">Heavy Tank</div>
+                  <div class="">Engeenier</div>
+                  <div class="">Arilery</div>
+               </div>
+            </div>
+            <div class="RoomView__ReadyButton">
+               <button id="RoomReadyButton">Не готовий</button>
+            </div>
+            <div class="RoomView__ReadyButton">
+               <button id="StartGameButton">Запустити</button>
+            </div>
+         </div>
+         <div id="MainMenu" class="MainMenu">
+            <div class="Settings_button">
+               <div id="showSettingsButton"></div>
+            </div>
+            <div class="View MainMenu__RoomListView" id="RoomListView">
+               <div class="TextInfo">
+                  Nickname
+                  <div>
+                     <div class="MainMenu__RoomListView-list">
+                        <div class="MainMenu__RoomListView-item">
+                           none
+                           <button>Join</button>
                         </div>
-
-                        <button class="joinRoomButton">Увійти</button>
-                    </div>
-                </div>
-
-                <div class="View MainMenu__CreateGameView" id="CreateGameView">
-                    <div class="TextInfo">
-                        Також ви можете створити свою гру тут
-                    </div>
-                    <div>
-                        <label>Назва кімнати</label>
-                        <input type="text" placeholder="Кімната 1" />
-                    </div>
-
-                    <div>
-                        <button>Створити</button>
-                    </div>
-                </div>
+                        <div class="MainMenu__RoomListView-item">
+                           room 1
+                           <button>Join</button>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="MainMen">
+                     <div class="MainMenu__RoomListView-join-form-username">
+                        Username
+                     </div>
+                     <button id="openCreateRoomWindow">Create room</button>
+                     <button class="joinRoomButton">Увійти</button>
+                  </div>
+               </div>
+               <div id="Settings">Налаштування</div>
+               <div id="GameView" class="GameView">
+                  <canvas id="canvas"></canvas>
+               </div>
             </div>
-
-            <div id="Settings">Налаштування</div>
-
-            <div id="RoomView" class="RoomView View">
-                <div class="RoomView__exitRoom">
-                    <button id="exitRoomButton">Вийти</button>
-                </div>
-                <div class="RoomView__game-name">Game name</div>
-                <div class="RoomView__Players">
-                    <div class="RoomView__Players-label">Гравці:</div>
-                    <div class="RoomView__Players-list"></div>
-                </div>
-                <div class="RoomView__SelectRole">
-                    <div class="RoomView__SelectRole-label">Оберіть роль</div>
-                    <div class="RoomView__SelectRole-list">
-                        <div class="">Heavy Tank</div>
-                        <div class="">Engeenier</div>
-                        <div class="">Arilery</div>
-                    </div>
-                </div>
-
-                <div class="RoomView__ReadyButton">
-                    <button id="RoomReadyButton">Не готовий</button>
-                </div>
-
-                <div class="RoomView__ReadyButton">
-                    <button id="StartGameButton">Запустити</button>
-                </div>
-            </div>
-
-            <div id="GameView" class="GameView">
-                <canvas id="canvas"></canvas>
-            </div>
-        </div>
-    </body>
+         </div>
+      </div>
+   </body>
 </html>

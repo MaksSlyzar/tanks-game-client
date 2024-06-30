@@ -1,6 +1,6 @@
 import SIOManager from "../../managers/SIOManager";
 import { View } from "../../modules/View";
-import { getElementById } from "../MainGui";
+import MainGui, { getElementById } from "../MainGui";
 
 class CreateGameView extends View {
     constructor () {
@@ -9,6 +9,12 @@ class CreateGameView extends View {
 
         const createButton = elem.getElementsByTagName("button")[0] as HTMLButtonElement;
         const roomNameInput = elem.getElementsByTagName("input")[0] as HTMLInputElement;
+
+        const openCreateRoomWindow = getElementById<HTMLButtonElement>("openCreateRoomWindow");
+
+        openCreateRoomWindow.onclick = () => {
+          MainGui.changeView("CreateGame");
+        }
 
         createButton.onclick = () => {
             if (roomNameInput.value.length < 5)

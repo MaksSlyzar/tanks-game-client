@@ -5,6 +5,8 @@ import { View } from "../modules/View";
 import AuthorizationView from "./Authorization";
 import RoomView from "./RoomView";
 import GameEndView from "./GameEndView";
+import OpenFullScreen from "./OpeFullScreen";
+import CreateGameView from "./MainMenuView/CreateGameView";
 
 export function getElementById<elementType>(elementId: string): elementType {
     const element = document.getElementById(elementId) as elementType;
@@ -21,6 +23,7 @@ export function getElementByClass<elementType>(
           )[0] as elementType)
         : (document.getElementsByClassName(elementClass)[0] as elementType);
 
+
     return element;
 }
 
@@ -34,6 +37,8 @@ class MainGui {
         this.appendView(new AuthorizationView());
         this.appendView(new RoomView());
         this.appendView(new GameEndView());
+        this.appendView(new OpenFullScreen());
+        this.appendView(new CreateGameView());
 
         this.changeView("Authorization");
     }
@@ -52,7 +57,7 @@ class MainGui {
 
     changeView(viewName: string) {
         for (const view of this.views) {
-            if (view.name != viewName) view.hide();
+            if (view.name != viewName && view.flexVisibility) view.hide();
             else {
                 view.show();
                 view.onShow();

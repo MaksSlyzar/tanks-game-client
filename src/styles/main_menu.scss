@@ -4,6 +4,7 @@ $background-color: #2ecc71;
 $font-color: #ecf0f1;
 
 .Settings_button {
+    display: none;
     z-index: 2;
     position: absolute;
     width: 60px;
@@ -24,12 +25,13 @@ $font-color: #ecf0f1;
 
 
 .MainMenu {
-    padding: 50px;
-    position: absolute;
-    width: calc(100% - 100px);
-    height: calc(100% - 100px);
+    position: relative;
+    width: 100%;
+    height: 100%;
     align-items: center;
     justify-content: center;
+    margin: 0;
+    padding: 0;
     background-color: $secondary-color;
 
     &__CreateGameView {
@@ -64,24 +66,33 @@ $font-color: #ecf0f1;
     }
 
     &__RoomListView {
-        width: 300px;
+        width: 100%;
+        height: 100%;
         color: white;
-        width: 40%;
-        margin: 20px;
+        margin: 0px;
         text-align: center;
+        padding: 2px;
 
         &-list {
-            height: 200px;
+            height: 100px;
             overflow: auto;
         }
 
         &-item {
+          height: 30px;
+          width: 100%;
             color: white;
             text-align: left;
             cursor: default;
             user-select: none;
-            border-bottom: silver 1px solid;
-            margin: 2px;
+            border-bottom: darkblue 3px solid;
+            margin-bottom: 12px;
+
+            button {
+              float: right;
+              width: 80px;
+              height: 30px;
+            }
         }
 
         .active {
@@ -131,6 +142,20 @@ $font-color: #ecf0f1;
 @media screen and (max-width: 1200px) {
     .MainMenu {
         background-color: $secondary-color;
+        display: flex;
+
+        &-View {
+          padding: 3px;
+          margin: 3px;
+        }
+
+        &__RoomListView {
+          
+
+          &-list {
+            
+          }
+        }
 
         &__login-container {
             input {

@@ -19,6 +19,8 @@ class SettingsView extends View {
         button.onclick = () => {
             MainGui.changeView("Settings");
         }
+
+        this.hide();
     }
 }
 

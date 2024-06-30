@@ -12,10 +12,10 @@ class MainMenuView extends View {
         const elem = document.getElementById("MainMenu") as HTMLDivElement;
         super("MainMenu", elem);
 
-        this.createGameView = new CreateGameView();
+        //this.createGameView = new CreateGameView();
         this.roomListView = new RoomListView();
         
-        this.createGameView.show();
+        //this.createGameView.show();
         this.roomListView.show();
     }
 }

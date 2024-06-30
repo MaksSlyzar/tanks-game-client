@@ -26,13 +26,18 @@ class RoomListView extends View {
 
             const { roomsData } = data;
 
-            listDiv.innerHTML = "";
+            //listDiv.innerHTML = "";
 
             roomsData.map((room: { roomName: string, players: string[] }) => {
                 const roomItem = document.createElement("div");
                 
                 roomItem.classList.add("MainMenu__RoomListView-item");
                 roomItem.innerText = room.roomName;
+                const _joinButton = document.createElement("div") as HTMLDivElement;
+
+                _joinButton.innerText = "Join";
+
+                roomItem.appendChild(_joinButton);
 
                 roomItem.onclick = () => {
                     listDiv.childNodes.forEach((node) => {
